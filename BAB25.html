@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>BAB25</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>BAB1</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Latihan Kosakata</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .card {
+    background: white;
+    padding: 30px;
+    width: 400px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  input {
+    width: 90%;
+    padding: 8px;
+    margin-top: 15px;
+  }
+  button {
+    margin-top: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+  }
+  .result {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .wrong { color: red; }
+  .correct { color: green; }
+  ol { text-align:left; max-height:400px; overflow:auto; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2 id="question"></h2>
+  <input type="text" id="answerInput" placeholder="Tulis jawaban di sini">
+  <br>
+  <button id="nextBtn">Selanjutnya</button>
+</div>
+
+<script>
+let questions = [
+{ soal: "외국인 근로자", jawaban: "pekerja asing" },
+{ soal: "지원기관", jawaban: "lembaga bantuan pekerja asing" },
+{ soal: "외국인 주민 폭력 상담 지원 센터", jawaban: "pusat konsultasi kekerasan untuk penduduk asing" },
+{ soal: "수업", jawaban: "pelajaran" },
+{ soal: "체육 한마당", jawaban: "acara olahraga" },
+{ soal: "-(으)러", jawaban: "untuk / bermaksud melakukan sesuatu" },
+{ soal: "통역 서비스", jawaban: "layanan penerjemahan" },
+{ soal: "-기 때문에", jawaban: "karena" },
+{ soal: "행사에 참여하다", jawaban: "Menghadiri acara" },
+{ soal: "교육 프로그램", jawaban: "program pendidikan" },
+{ soal: "무료 진료소", jawaban: "klinik gratis" },
+{ soal: "한국어 교육", jawaban: "pendidikan bahasa korea" },
+{ soal: "대상", jawaban: "Target" },
+{ soal: "컴퓨터 교육", jawaban: "pendidikan komputer" },
+{ soal: "법률 교육", jawaban: "pendidikan hukum" },
+{ soal: "무료진료를 받다", jawaban: "menerima pengobatan gratis" },
+{ soal: "직업 훈련", jawaban: "pelatihan pekerjaan" },
+{ soal: "자원 봉사를 하다", jawaban: "menjadi sukarelawan" },
+{ soal: "안전 교육", jawaban: "pendidikan keselamatan" },
+{ soal: "떨리다", jawaban: "gugup" },
+{ soal: "걱정하다", jawaban: "khawatir" },
+{ soal: "문화 체험", jawaban: "pengalaman budaya" },
+{ soal: "모집", jawaban: "penerimaan / pendaftaran" },
+{ soal: "고용 허가제", jawaban: "sistem ijin kerja" },
+{ soal: "교육 기간", jawaban: "waktu pendidikan" },
+{ soal: "고용하다", jawaban: "memperkerjakan" },
+{ soal: "초급 반", jawaban: "kelas tingkat dasar" },
+{ soal: "중급 반", jawaban: "kelas tingkat menengah" },
+{ soal: "고급 반", jawaban: "kelas tingkat tinggi" },
+{ soal: "교육 내용", jawaban: "materi pendidikan" },
+{ soal: "토픽반", jawaban: "kelas ujian topik" },
+{ soal: "신청 방법", jawaban: "cara pendaftaran" },
+{ soal: "한국 산업 인력 공단", jawaban: "layanan HRD korea" },
+{ soal: "방문 접수", jawaban: "pendaftaran langsung" },
+{ soal: "문의", jawaban: "pertanyaan" },
+{ soal: "농촌 지역", jawaban: "daerah pedesaan" },
+{ soal: "맞다", jawaban: "benar" },
+{ soal: "중소 도시", jawaban: "kota kecil dan menengah" },
+{ soal: "여러", jawaban: "beberapa" },
+{ soal: "체계적이다", jawaban: "sistematis" },
+{ soal: "다", jawaban: "semua" },
+{ soal: "효율적인", jawaban: "efisien" },
+{ soal: "직업", jawaban: "pekerjaan" },
+{ soal: "권익 보호", jawaban: "perlindungan hak" },
+{ soal: "목욕", jawaban: "mandi" },
+{ soal: "사회", jawaban: "masyarakat" },
+{ soal: "금연", jawaban: "dilarang merokok" },
+{ soal: "구축", jawaban: "pembangunan" },
+{ soal: "얼음", jawaban: "es batu" },
+{ soal: "꾸준히", jawaban: "secara konsisten" },
+{ soal: "참가 대상", jawaban: "target peserta" },
+{ soal: "상담", jawaban: "konsultasi" },
+{ soal: "전화 접수", jawaban: "pendaftaran via telepon" },
+];
+
+// Acak soal
+questions = questions.sort(() => Math.random() - 0.5);
+
+let index = 0;
+let score = 0;
+let userAnswers = [];
+
+const questionEl = document.getElementById("question");
+const answerInput = document.getElementById("answerInput");
+const nextBtn = document.getElementById("nextBtn");
+const card = document.querySelector(".card");
+
+function showQuestion() {
+  questionEl.textContent = "Soal " + (index + 1) + ": " + questions[index].soal;
+  answerInput.value = "";
+  answerInput.focus();
+}
+
+nextBtn.addEventListener("click", () => {
+  const userAnswer = answerInput.value.trim().toLowerCase();
+  userAnswers[index] = userAnswer; // simpan jawaban sesuai index
+
+  if (userAnswer === questions[index].jawaban) {
+    score++;
+  }
+
+  index++;
+  if (index < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+});
+
+function showResult() {
+  let answerList = "";
+  questions.forEach((q, i) => {
+    if (userAnswers[i] === q.jawaban) {
+      answerList += `<li>${q.soal} = <span class="correct">${q.jawaban}</span></li>`;
+    } else {
+      answerList += `<li>${q.soal} = <span class="correct">${q.jawaban}</span><br>
+                     Jawaban kamu: <span class="wrong">${userAnswers[i] || "(kosong)"}</span></li>`;
+    }
+  });
+
+  card.innerHTML = `
+    <h2>Hasil</h2>
+    <p class="result">Nilai: ${score} / ${questions.length}</p>
+    <hr>
+    <p>Kunci Jawaban:</p>
+    <ol>${answerList}</ol>
+  `;
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
+    
+  </body>
+  
+</html>
